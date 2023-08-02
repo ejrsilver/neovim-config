@@ -8,18 +8,39 @@ lsp.ensure_installed({
     'pylsp',
     'fortls',
     'clangd',
+    'lua_ls',
+    'asm_lsp',
+    'bashls',
+    'cssls',
+    'dockerls',
+    'eslint',
+    'gopls',
+    'html',
+    'jdtls',
+    'jsonls',
+    'marksman',
+    'intelephense',
+    'pyright',
+    'sqlls',
 })
 
 local cmp = require('cmp')
-local cmp_select = { behaviour = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-	['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-	['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-	['<C-y>'] = cmp.mapping.confirm({ select = true }),
-	['<C-Space>'] = cmp.mapping.complete(),
+cmp.setup({
+    mapping = {
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                local entry = cmp.get_selected_entry()
+                if not entry then
+                    cmp.select_next_item({ behaviour = cmp.SelectBehavior.Select })
+                else
+                    cmp.confirm()
+                end
+            else
+                fallback()
+            end
+        end, {'i', 's', 'c',}),
+    }
 })
-
-lsp.setup_nvim_cmp({ mapping = cmp_mappings })
 
 lsp.on_attach(function(client, bufnr)
 	local opts = {buffer = bufnr, remap = false}
