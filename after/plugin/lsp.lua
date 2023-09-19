@@ -4,25 +4,30 @@ lsp.preset('recommended')
 lsp.ensure_installed({
 	'tsserver',
 	'eslint',
-	'rust_analyzer',
-    'pylsp',
-    'fortls',
     'clangd',
     'lua_ls',
     'asm_lsp',
     'bashls',
-    'cssls',
-    'dockerls',
-    'eslint',
-    'gopls',
     'html',
-    'jdtls',
-    'jsonls',
     'marksman',
     'intelephense',
-    'pyright',
     'sqlls',
 })
+
+local lspconfig = require('lspconfig')
+if vim.loop.os_uname().sysname == "Windows" then
+    lspconfig.intelephense.setup {
+      on_attach = on_attach, 
+      capabilities = capabilities, 
+      settings = {
+        intelephense = {
+          environment = {
+            includePaths = {"C:\\Users\\ethan.admin\\Documents\\PapEasy\\papeasy-web\\wordpress", }
+          }
+        }
+      }
+    }
+end
 
 local cmp = require('cmp')
 cmp.setup({
@@ -55,6 +60,12 @@ lsp.on_attach(function(client, bufnr)
 	vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
 	vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
 	vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+
+    vim.api.nvim_create_autocmd("BufWritePost", {
+        callback = function ()
+            vim.lsp.buf.format()
+        end
+    })
 end)
 
 lsp.setup()
