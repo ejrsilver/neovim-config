@@ -7,16 +7,16 @@ lsp.ensure_installed({
     'lua_ls',
 })
 
-local lsp_format_on_save = function(bufnr)
-    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-    vim.api.nvim_create_autocmd('BufWritePre', {
-        group = augroup,
-        buffer = bufnr,
-        callback = function()
-            vim.lsp.buf.format()
-        end,
-    })
-end
+-- local lsp_format_on_save = function(bufnr)
+--     vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+--     vim.api.nvim_create_autocmd('BufWritePre', {
+--         group = augroup,
+--         buffer = bufnr,
+--         callback = function()
+--             vim.lsp.buf.format()
+--         end,
+--     })
+-- end
 
 local cmp = require('cmp')
 cmp.setup({
@@ -38,6 +38,8 @@ cmp.setup({
     }
 })
 
+
+
 lsp.on_attach(function(client, bufnr)
     local opts = { buffer = bufnr, remap = false }
 
@@ -50,9 +52,10 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
     vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+    vim.keymap.set("n", "<C-s>", function() vim.lsp.buf.format() end)
     vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 
-    lsp_format_on_save(bufnr)
+--  lsp_format_on_save(bufnr)
 end)
 
 lsp.setup()
