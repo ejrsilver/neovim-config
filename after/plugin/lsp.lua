@@ -3,15 +3,8 @@ lsp.preset('recommended')
 
 lsp.ensure_installed({
     'tsserver',
-    'eslint',
     'clangd',
     'lua_ls',
-    'asm_lsp',
-    'bashls',
-    'html',
-    'marksman',
-    'intelephense',
-    'sqlls',
 })
 
 local lsp_format_on_save = function(bufnr)
@@ -25,22 +18,6 @@ local lsp_format_on_save = function(bufnr)
     })
 end
 
-local lspconfig = require('lspconfig')
-lspconfig.intelephense.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-        intelephense = {
-            format = {
-                braces = "allman"
-            },
-            environment = {
-                includePaths = { "C:\\Users\\ethan.admin\\Documents\\Projects\\PapEasy\\papeasy-web\\wordpress", }
-            }
-        }
-    }
-}
-
 local cmp = require('cmp')
 cmp.setup({
     mapping = {
@@ -52,7 +29,7 @@ cmp.setup({
             end
         end, { 'i', 's', 'c', }),
         ['<Enter>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
+            if cmp.visible() and cmp.get_selected_entry() ~= nil then
                 cmp.confirm()
             else
                 fallback()
